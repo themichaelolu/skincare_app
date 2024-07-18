@@ -8,6 +8,9 @@ part of 'router_base.dart';
 
 List<RouteBase> get $appRoutes => [
       $onboardingViewRoute,
+      $signUpViewRoute,
+      $loginViewRoute,
+      $pickSkinTypeViewRoute,
     ];
 
 RouteBase get $onboardingViewRoute => GoRouteData.$route(
@@ -21,6 +24,74 @@ extension $OnboardingViewRouteExtension on OnboardingViewRoute {
 
   String get location => GoRouteData.$location(
         '/onboarding',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $signUpViewRoute => GoRouteData.$route(
+      path: '/signUp',
+      factory: $SignUpViewRouteExtension._fromState,
+    );
+
+extension $SignUpViewRouteExtension on SignUpViewRoute {
+  static SignUpViewRoute _fromState(GoRouterState state) =>
+      const SignUpViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/signUp',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $loginViewRoute => GoRouteData.$route(
+      path: '/login',
+      factory: $LoginViewRouteExtension._fromState,
+    );
+
+extension $LoginViewRouteExtension on LoginViewRoute {
+  static LoginViewRoute _fromState(GoRouterState state) => LoginViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/login',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pickSkinTypeViewRoute => GoRouteData.$route(
+      path: '/pickSkinType',
+      factory: $PickSkinTypeViewRouteExtension._fromState,
+    );
+
+extension $PickSkinTypeViewRouteExtension on PickSkinTypeViewRoute {
+  static PickSkinTypeViewRoute _fromState(GoRouterState state) =>
+      PickSkinTypeViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/pickSkinType',
       );
 
   void go(BuildContext context) => context.go(location);

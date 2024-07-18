@@ -52,8 +52,8 @@ const lightTextTheme = TextTheme(
     fontFamily: 'Satoshi',
   ),
   labelMedium: TextStyle(
-    fontSize: 12.0,
-    letterSpacing: 1.0,
+    fontSize: 13.0,
+ 
     fontWeight: FontWeight.normal,
     fontFamily: 'Satoshi',
   ),

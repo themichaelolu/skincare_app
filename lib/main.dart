@@ -28,6 +28,7 @@ class MyApp extends ConsumerWidget {
           scaffoldBackgroundColor: const Color(0xffF9FBF2),
           textTheme: lightTextTheme,
           useMaterial3: true,
+          fontFamily: 'Satoshi',
         ),
         routeInformationProvider: goRouter.routeInformationProvider,
         routeInformationParser: goRouter.routeInformationParser,
