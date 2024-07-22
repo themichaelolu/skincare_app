@@ -18,8 +18,7 @@ class OnboardingView extends StatefulWidget {
   State<OnboardingView> createState() => _OnboardingViewState();
 }
 
-class _OnboardingViewState extends State<OnboardingView>
-  {
+class _OnboardingViewState extends State<OnboardingView> {
   late PageController _controller;
 
   int currentIndex = 0;
@@ -27,7 +26,7 @@ class _OnboardingViewState extends State<OnboardingView>
   @override
   void initState() {
     _controller = PageController();
-   
+
     super.initState();
   }
 
@@ -50,14 +49,12 @@ class _OnboardingViewState extends State<OnboardingView>
   ];
 
   void _handlePageViewChanged(int currentPageIndex) {
-  
     setState(() {
       currentIndex = currentPageIndex;
     });
   }
 
   void _updateCurrentPageIndex(int index) {
-
     _controller.animateToPage(
       index,
       duration: const Duration(milliseconds: 400),
@@ -107,6 +104,8 @@ class _OnboardingViewState extends State<OnboardingView>
                           .asMap()
                           .entries
                           .map((e) => Container(
+                                height: 12.h,
+                                width: 12.w,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: currentIndex == e.key
@@ -114,13 +113,15 @@ class _OnboardingViewState extends State<OnboardingView>
                                             color: AppColors.primaryColor,
                                           )
                                         : null),
-                                child: Container(
-                                  height: 8,
-                                  width: 8,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    shape: BoxShape.circle,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 8,
+                                    width: 8,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
                                 ),
                               ))

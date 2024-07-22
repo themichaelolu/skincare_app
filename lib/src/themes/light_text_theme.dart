@@ -25,9 +25,9 @@ const lightTextTheme = TextTheme(
     fontFamily: 'Satoshi',
   ),
   titleSmall: TextStyle(
-    fontSize: 14.0,
-    letterSpacing: 0.1,
-    fontWeight: FontWeight.w500,
+    fontSize: 13.0,
+
+
     fontFamily: 'Satoshi',
   ),
   bodyLarge: TextStyle(
@@ -52,7 +52,7 @@ const lightTextTheme = TextTheme(
     fontFamily: 'Satoshi',
   ),
   labelMedium: TextStyle(
-    fontSize: 13.0,
+    fontSize: 11.0,
  
     fontWeight: FontWeight.normal,
     fontFamily: 'Satoshi',

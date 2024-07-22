@@ -20,6 +20,8 @@ class TextFieldWidget extends StatefulWidget {
     this.keyboardType,
     this.enabled,
     this.readOnly = false,
+    this.filled,
+    this.fillColor,
   });
 
   final String? hintText;
@@ -32,6 +34,8 @@ class TextFieldWidget extends StatefulWidget {
   final bool? enabled;
   final bool readOnly;
   final String? labelText;
+  final bool? filled;
+  final Color? fillColor;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -85,6 +89,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           obscuringCharacter: '●',
           obscureText: widget.isPasswordField ? _obscureText : false,
           decoration: InputDecoration(
+            fillColor: widget.fillColor,
+            filled: widget.filled,
             suffixIcon: widget.isPasswordField
                 ? PasswordSuffixWidget(
                     obscureText: _obscureText,

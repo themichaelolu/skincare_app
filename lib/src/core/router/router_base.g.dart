@@ -11,6 +11,11 @@ List<RouteBase> get $appRoutes => [
       $signUpViewRoute,
       $loginViewRoute,
       $pickSkinTypeViewRoute,
+      $pickSkinGoalsViewRoute,
+      $buildRoutineViewRoute,
+      $homeBaseViewRoute,
+      $productDetailViewRoute,
+      $cartBaseViewRoute,
     ];
 
 RouteBase get $onboardingViewRoute => GoRouteData.$route(
@@ -92,6 +97,121 @@ extension $PickSkinTypeViewRouteExtension on PickSkinTypeViewRoute {
 
   String get location => GoRouteData.$location(
         '/pickSkinType',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pickSkinGoalsViewRoute => GoRouteData.$route(
+      path: '/pickSkinGoals',
+      factory: $PickSkinGoalsViewRouteExtension._fromState,
+    );
+
+extension $PickSkinGoalsViewRouteExtension on PickSkinGoalsViewRoute {
+  static PickSkinGoalsViewRoute _fromState(GoRouterState state) =>
+      PickSkinGoalsViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/pickSkinGoals',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $buildRoutineViewRoute => GoRouteData.$route(
+      path: '/buildRoutine',
+      factory: $BuildRoutineViewRouteExtension._fromState,
+    );
+
+extension $BuildRoutineViewRouteExtension on BuildRoutineViewRoute {
+  static BuildRoutineViewRoute _fromState(GoRouterState state) =>
+      BuildRoutineViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/buildRoutine',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $homeBaseViewRoute => GoRouteData.$route(
+      path: '/home',
+      factory: $HomeBaseViewRouteExtension._fromState,
+    );
+
+extension $HomeBaseViewRouteExtension on HomeBaseViewRoute {
+  static HomeBaseViewRoute _fromState(GoRouterState state) =>
+      HomeBaseViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/home',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $productDetailViewRoute => GoRouteData.$route(
+      path: '/productDetail',
+      factory: $ProductDetailViewRouteExtension._fromState,
+    );
+
+extension $ProductDetailViewRouteExtension on ProductDetailViewRoute {
+  static ProductDetailViewRoute _fromState(GoRouterState state) =>
+      ProductDetailViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/productDetail',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $cartBaseViewRoute => GoRouteData.$route(
+      path: '/cart',
+      factory: $CartBaseViewRouteExtension._fromState,
+    );
+
+extension $CartBaseViewRouteExtension on CartBaseViewRoute {
+  static CartBaseViewRoute _fromState(GoRouterState state) =>
+      CartBaseViewRoute();
+
+  String get location => GoRouteData.$location(
+        '/cart',
       );
 
   void go(BuildContext context) => context.go(location);

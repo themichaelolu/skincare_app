@@ -6,6 +6,11 @@ import 'package:skincare_app/src/core/router/not_found_page.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:skincare_app/src/features/authentication/login/login.dart';
 import 'package:skincare_app/src/features/authentication/signup/sign_up.dart';
+import 'package:skincare_app/src/features/cart/cart.dart';
+import 'package:skincare_app/src/features/home/home.dart';
+import 'package:skincare_app/src/features/home/product_detail.dart';
+import 'package:skincare_app/src/features/onboarding/build_routine.dart';
+import 'package:skincare_app/src/features/onboarding/pick_skin_goals.dart';
 import 'package:skincare_app/src/features/onboarding/pick_skin_type.dart';
 
 import '../../features/onboarding/onboarding.dart';
@@ -48,14 +53,61 @@ class SignUpViewRoute extends GoRouteData {
 @TypedGoRoute<LoginViewRoute>(path: '/login')
 class LoginViewRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context, GoRouterState state) =>  LoginView(
-    goToPickSkinType: () => PickSkinTypeViewRoute().go(context),
-  );
+  Widget build(BuildContext context, GoRouterState state) => LoginView(
+        goToPickSkinType: () => PickSkinTypeViewRoute().go(context),
+      );
 }
-
 
 @TypedGoRoute<PickSkinTypeViewRoute>(path: '/pickSkinType')
 class PickSkinTypeViewRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context, GoRouterState state) => const PickSkinTypeView();
+  Widget build(BuildContext context, GoRouterState state) => PickSkinTypeView(
+        goToSkinGoals: () => PickSkinGoalsViewRoute().push(context),
+      );
 }
+
+@TypedGoRoute<PickSkinGoalsViewRoute>(path: '/pickSkinGoals')
+class PickSkinGoalsViewRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => PickSkinGoalsView(
+        goBack: () => PickSkinTypeViewRoute().go(context),
+        goToBuildRoutine: () => BuildRoutineViewRoute().push(context),
+      );
+}
+
+@TypedGoRoute<BuildRoutineViewRoute>(path: '/buildRoutine')
+class BuildRoutineViewRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) => BuildRoutineView(
+        goBack: () => PickSkinGoalsViewRoute().go(context),
+        goHome: () => HomeBaseViewRoute().go(context),
+      );
+}
+
+@TypedGoRoute<HomeBaseViewRoute>(path: '/home')
+class HomeBaseViewRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+       HomeBaseView(
+        goToDetails: () => ProductDetailViewRoute().push(context),
+      );
+}
+
+
+@TypedGoRoute<ProductDetailViewRoute>(path: '/productDetail')
+class ProductDetailViewRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+       ProductDetailView(
+        goToCart: () => CartBaseViewRoute().push(context),
+      );
+}
+
+
+@TypedGoRoute<CartBaseViewRoute>(path: '/cart')
+class CartBaseViewRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const CartBaseView();
+}
+
