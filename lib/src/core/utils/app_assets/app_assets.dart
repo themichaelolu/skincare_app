@@ -27,5 +27,8 @@ class AppAssets {
   static const like = 'assets/icons/like.svg';
   static const cart = 'assets/icons/cart.svg';
   static const voucher = 'assets/icons/voucher.svg';
-
+  static const home = 'assets/icons/home.svg';
+  static const liked = 'assets/icons/liked.svg';
+  static const explore = 'assets/icons/explore.svg';
+  static const bigPic = 'assets/images/big_pic.png';
 }

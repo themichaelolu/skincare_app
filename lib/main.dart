@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logging/logging.dart';
 import 'package:skincare_app/src/core/router/router_base.dart';
+import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/light_text_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,19 +10,18 @@ void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-final log = Logger('Getteasy App');
 
-class MyApp extends ConsumerWidget {
+
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.watch(goRouterProvider);
+  Widget build(BuildContext context,) {
+   
     return ScreenUtilInit(
       designSize: const Size(375, 812),
-      child: MaterialApp.router(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -30,12 +30,12 @@ class MyApp extends ConsumerWidget {
           useMaterial3: true,
           fontFamily: 'Satoshi',
         ),
-        routeInformationProvider: goRouter.routeInformationProvider,
-        routeInformationParser: goRouter.routeInformationParser,
-        routerDelegate: goRouter.routerDelegate,
         restorationScopeId: 'app',
-        scaffoldMessengerKey: rootScaffoldMessengerKey,
+      routes: {
+        // '/onboarding' =>  OnboardingView();
+      },
       ),
+      
     );
   }
 }

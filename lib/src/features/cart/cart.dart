@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:skincare_app/src/core/domain/cart/providers.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -11,40 +14,18 @@ import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
-class CartBaseView extends StatefulWidget {
+class CartBaseView extends ConsumerStatefulWidget {
   const CartBaseView({super.key});
 
   @override
-  State<CartBaseView> createState() => _CartBaseViewState();
+  ConsumerState<CartBaseView> createState() => _CartBaseViewState();
 }
 
-class _CartBaseViewState extends State<CartBaseView> {
-  int quantity = 0;
-
-  void incrementQty() {
-    setState(() {
-      if (quantity < 11) {
-        quantity++;
-      }
-    });
-    if (kDebugMode) {
-      print('QTY:;$quantity');
-    }
-  }
-
-  void decrementQty() {
-    setState(() {
-      if (quantity > 0) {
-        quantity--;
-      }
-    });
-    if (kDebugMode) {
-      print('QTY:;$quantity');
-    }
-  }
-
+class _CartBaseViewState extends ConsumerState<CartBaseView> {
   @override
   Widget build(BuildContext context) {
+    final cart = ref.watch(cartProvider);
+    final productQuantities = cart.productQuantity();
     return Scaffold(
       appBar: AppBar(
         toolbarOpacity: 1,
@@ -77,7 +58,10 @@ class _CartBaseViewState extends State<CartBaseView> {
             SizedBox(
               height: 416.h,
               child: ListView.builder(
+                itemCount: productQuantities.length,
                 itemBuilder: (context, index) {
+                  final product = productQuantities.keys.elementAt(index);
+                  final quantity = productQuantities[product];
                   return Container(
                     margin: const EdgeInsets.all(10),
                     height: 95.h,
@@ -101,9 +85,10 @@ class _CartBaseViewState extends State<CartBaseView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: const Image(
+                            child: Image(
                               color: AppColors.textGreyColor,
-                              image: AssetImage(AppAssets.product),
+                              image: AssetImage(
+                                  product.images.first.smallPicture!),
                             ),
                           ),
                           Padding(
@@ -113,12 +98,12 @@ class _CartBaseViewState extends State<CartBaseView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Black Rice Hyaluronic Toner',
+                                  product.productName ?? '',
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                                 6.h.verticalSpace,
                                 Text(
-                                  'Haruharu Wonder - 200ml',
+                                  product.productBrand ?? '',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall
@@ -128,7 +113,8 @@ class _CartBaseViewState extends State<CartBaseView> {
                                 ),
                                 6.h.verticalSpace,
                                 Text(
-                                  'N12,500',
+                                  NumberFormat.decimalPattern()
+                                      .format(product.price),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -150,7 +136,7 @@ class _CartBaseViewState extends State<CartBaseView> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   InkWell(
-                                    onTap: () => decrementQty,
+                                    // onTap: decrementQty,
                                     child: Container(
                                       height: 16.h,
                                       width: 16.w,
@@ -176,7 +162,7 @@ class _CartBaseViewState extends State<CartBaseView> {
                                         ),
                                   ),
                                   InkWell(
-                                    onTap: () => incrementQty,
+                                    // onTap: incrementQty,
                                     child: Container(
                                       height: 16.h,
                                       width: 16.w,
@@ -234,7 +220,7 @@ class _CartBaseViewState extends State<CartBaseView> {
                 ),
               ),
             ),
-            Spacer(),
+            10.h.verticalSpace,
             ButtonWidget(
               height: 45.h,
               width: screenSize(context).width,

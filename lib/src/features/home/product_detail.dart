@@ -1,23 +1,38 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:skincare_app/src/core/domain/cart/providers.dart';
+import 'package:skincare_app/src/core/domain/products/products.dart';
+import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
-class ProductDetailView extends StatefulWidget {
-  const ProductDetailView({super.key, this.goToCart,});
+class ProductDetailView extends ConsumerStatefulWidget {
+  const ProductDetailView({
+    super.key,
+    this.goToCart,
+     this.product,
+  });
 
   final VoidCallback? goToCart;
+  final Product? product;
+  
 
   @override
-  State<ProductDetailView> createState() => _ProductDetailViewState();
+  ConsumerState<ProductDetailView> createState() => _ProductDetailViewState();
 }
 
-class _ProductDetailViewState extends State<ProductDetailView> {
+class _ProductDetailViewState extends ConsumerState<ProductDetailView> {
   @override
   Widget build(BuildContext context) {
+    final cart = ref.read(cartProvider.notifier);
+
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(
@@ -28,6 +43,27 @@ class _ProductDetailViewState extends State<ProductDetailView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ButtonWidget(
+              onTap: () {
+                Flushbar(
+                  title: 'Success!',
+                  icon: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.darkGreen,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        CupertinoIcons.check_mark,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                  message: 'Item added Successfully!',
+                );
+                cart.addProduct(widget.product!);
+              },
               border: Border.all(
                 color: AppColors.primaryColor,
               ),
@@ -88,7 +124,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                 ),
                 child: Center(
                   child: Image.asset(
-                    AppAssets.product,
+                    widget.product?.images.first.bigPicture ?? ''
                   ),
                 ),
               ),
@@ -121,13 +157,13 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Harharu Wonder',
+                     widget.product?.productBrand ?? '',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: AppColors.darkGreen,
                           ),
                     ),
                     Text(
-                      '★ 1,000 Reviews',
+                      '★ ${widget.product?.reviewCount}Reviews',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: const Color(0xffFBBC05),
                           ),
@@ -139,13 +175,13 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Black Rice Hyaluronic Toner',
+                      widget.product?.productName ?? '',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     Text(
-                      'N 14,000',
+                  NumberFormat.decimalPattern().format(widget.product?.price),
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge

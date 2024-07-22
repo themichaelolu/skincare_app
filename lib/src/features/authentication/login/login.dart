@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/core/utils/constants/extensions.dart';
+import 'package:skincare_app/src/features/home/home.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
 import '../../../core/utils/constants/textfield.dart';
@@ -83,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 20.h.verticalSpace,
                 ButtonWidget(
-                  onTap: () => widget.goToPickSkinType?.call(),
+                  onTap: () => Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const DashboardBaseView(),)),
                   height: 45.h,
                   width: screenSize(context).width,
                   color: Colors.green,

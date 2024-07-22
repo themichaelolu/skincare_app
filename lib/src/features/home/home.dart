@@ -1,11 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
+import 'package:skincare_app/src/features/home/product_detail.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
+
+import '../../core/domain/products/products.dart';
 
 class HomeBaseView extends StatefulWidget {
   const HomeBaseView({
@@ -168,15 +175,15 @@ class _HomeBaseViewState extends State<HomeBaseView>
             TabWidget(tabController: tabController),
             21.h.verticalSpace,
             Expanded(
-                child: TabBarView(controller: tabController, children: [
+                child: TabBarView(controller: tabController, children: const [
               AllProductsTabView(
-                onTap: () => widget.goToDetails?.call(),
+        
               ),
-              const CleanserTabView(),
-              const TonerTabView(),
-              const MoisturiserTabView(),
-              const SerumTabView(),
-              const SunScreenTabView()
+              CleanserTabView(),
+              TonerTabView(),
+              MoisturiserTabView(),
+              SerumTabView(),
+              SunScreenTabView()
             ]))
           ],
         ),
@@ -229,7 +236,7 @@ class TabWidget extends StatelessWidget {
   }
 }
 
-class AllProductsTabView extends StatelessWidget {
+class AllProductsTabView extends ConsumerStatefulWidget {
   const AllProductsTabView({
     super.key,
     this.onTap,
@@ -238,34 +245,46 @@ class AllProductsTabView extends StatelessWidget {
   final void Function()? onTap;
 
   @override
+  ConsumerState<AllProductsTabView> createState() => _AllProductsTabViewState();
+}
+
+class _AllProductsTabViewState extends ConsumerState<AllProductsTabView> {
+ 
+
+  @override
   Widget build(BuildContext context) {
+     final products = ref.watch(productProvider);
     return GridView.builder(
+      itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16),
       itemBuilder: (context, index) {
+        final product = products[index];
         return InkWell(
-          onTap: onTap,
+          onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) =>  ProductDetailView(
+              product: products[index],
+                ),)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(AppAssets.product),
+              Image.asset(product.images.first.smallPicture!),
               8.h.verticalSpace,
               Text(
-                'Skin004',
+                product.productBrand ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.darkGreen,
                     ),
               ),
               4.h.verticalSpace,
               Text(
-                'Madagascar Centella Ampoule - 100ml',
+                product.productName ?? '',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
               Text(
-                'N11,200',
+                NumberFormat.decimalPattern().format(product.price),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

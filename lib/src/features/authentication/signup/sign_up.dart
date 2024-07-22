@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,11 +7,12 @@ import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/core/utils/constants/extensions.dart';
 import 'package:skincare_app/src/core/utils/constants/textfield.dart';
+import 'package:skincare_app/src/features/authentication/login/login.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
 class SignUpView extends StatefulWidget {
-  const SignUpView({super.key, this.goToLogin,});
-  final VoidCallback? goToLogin;
+  const SignUpView({super.key,});
+
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
@@ -149,7 +151,7 @@ class _SignUpViewState extends State<SignUpView> {
                     children: [
                       const Text('Already have an account? '),
                       InkWell(
-                        onTap: () => widget.goToLogin?.call(),
+                        onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => const LoginView(),),),
                         child: Text(
                           'Sign In',
                           style:

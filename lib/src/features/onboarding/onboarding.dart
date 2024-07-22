@@ -1,18 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
+import 'package:skincare_app/src/features/authentication/signup/sign_up.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({
     super.key,
-    this.goToSignUp,
   });
-
-  final VoidCallback? goToSignUp;
 
   @override
   State<OnboardingView> createState() => _OnboardingViewState();
@@ -78,6 +75,11 @@ class _OnboardingViewState extends State<OnboardingView> {
                 children: [
                   const SizedBox(),
                   InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const SignUpView(),
+                        )),
                     child: Text(
                       'Skip',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -154,7 +156,11 @@ class _OnboardingViewState extends State<OnboardingView> {
                   if (currentIndex < 2) {
                     _updateCurrentPageIndex(currentIndex + 1);
                   } else {
-                    widget.goToSignUp?.call();
+                    Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const SignUpView(),
+                        ));
                   }
                 },
                 child: Text(
