@@ -8,11 +8,12 @@ class CartNotifier extends StateNotifier<Cart> {
   void addProduct(Product product) {
     state = Cart(products: [...state.products, product]);
   }
+
+  void removeProduct(Product product) {
+    state = Cart(products: state.products.where((p) => p != product).toList());
+  }
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, Cart>((ref) {
   return CartNotifier();
 });
-
-
-

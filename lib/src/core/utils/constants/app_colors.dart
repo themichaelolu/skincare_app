@@ -5,4 +5,5 @@ class AppColors {
   static const white = Colors.white;
   static const textGreyColor = Color(0xffD9DDDC);
   static const darkGreen = Color(0xff025629);
+  static const lightGreen = Color(0xffF5FFF4);
 }

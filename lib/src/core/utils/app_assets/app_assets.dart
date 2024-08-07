@@ -31,4 +31,15 @@ class AppAssets {
   static const liked = 'assets/icons/liked.svg';
   static const explore = 'assets/icons/explore.svg';
   static const bigPic = 'assets/images/big_pic.png';
+  static const check = 'assets/icons/check.svg';
+  static const instant = 'assets/icons/instant.svg';
+  static const standard = 'assets/icons/standard.svg';
+  static const interstate = 'assets/icons/interstate.svg';
+  static const transfer = 'assets/icons/transfer.svg';
+  static const mastercard = 'assets/icons/mastercard.svg';
+  static const visa = 'assets/icons/visa.svg';
+  static const applePay = 'assets/icons/apple_pay.svg';
+  static const success = 'assets/icons/success.svg';
+  static const phone = 'assets/icons/phone.png';
+  static const church = 'assets/icons/church.jpg';
 }

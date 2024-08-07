@@ -151,7 +151,7 @@ class _SignUpViewState extends State<SignUpView> {
                     children: [
                       const Text('Already have an account? '),
                       InkWell(
-                        onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => const LoginView(),),),
+                        onTap: () => Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LoginView(),),),
                         child: Text(
                           'Sign In',
                           style:

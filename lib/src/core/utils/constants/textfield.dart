@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +23,9 @@ class TextFieldWidget extends StatefulWidget {
     this.readOnly = false,
     this.filled,
     this.fillColor,
+    this.inputFormatters,
+    this.onSaved,
+    this.onChanged,
   });
 
   final String? hintText;
@@ -30,7 +34,11 @@ class TextFieldWidget extends StatefulWidget {
   final bool isPasswordField;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
+  final void Function(String?)? onSaved;
+  final void Function(String)? onChanged;
+
   final bool? enabled;
   final bool readOnly;
   final String? labelText;

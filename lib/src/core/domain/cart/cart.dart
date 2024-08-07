@@ -5,21 +5,24 @@ class Cart {
 
   Cart({this.products = const <Product>[]});
 
-
-    void addProduct(Product product) {
+  void addProduct(Product product) {
     products.add(product);
+  }
+
+  void removeProduct(Product product) {
+    products.remove(product);
   }
 
   Map<Product, int> productQuantity() {
     final quantity = <Product, int>{};
 
-    for (var product in products) {
-      if (!quantity.containsKey(product)) {
-        quantity[product] = 1;
-      } else {
-        quantity[product]! + 1;
-      }
-    }
+   for (var product in products) {
+  if (!quantity.containsKey(product)) {
+    quantity[product] = 1;
+  } else {
+    quantity[product] = quantity[product]! + 1;
+  }
+}
 
     return quantity;
   }
@@ -35,8 +38,5 @@ class Cart {
     }
   }
 
-
-    String get subtotalString => subtotal.toStringAsFixed(2);
-
-
+  String get subtotalString => subtotal.toStringAsFixed(2);
 }

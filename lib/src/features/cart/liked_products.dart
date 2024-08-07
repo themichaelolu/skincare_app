@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 
 class LikedProductsView extends StatefulWidget {
   const LikedProductsView({super.key});
@@ -10,6 +12,6 @@ class LikedProductsView extends StatefulWidget {
 class _LikedProductsViewState extends State<LikedProductsView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Placeholder();
   }
 }
