@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/src/core/domain/shipping_info/db_helper.dart';
+import 'package:skincare_app/src/core/domain/shipping_info/shipping_info.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -12,13 +14,22 @@ import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
 class CheckoutView extends StatefulWidget {
-  const CheckoutView({super.key});
+  const CheckoutView({
+    super.key,
+    this.shippingID,
+  });
+
+  final int? shippingID;
 
   @override
   State<CheckoutView> createState() => _CheckoutViewState();
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
+  DbHelper dbHelper = DbHelper.instance;
+
+  // List<ShippingInfo> shippingInfo = [];
+
   final formKey = GlobalKey<FormState>();
   final checkOutNameCtrl = TextEditingController();
   final phoneNumCtrl = TextEditingController();
@@ -28,6 +39,68 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   String? selectedCities;
   String? selectedCountry;
+
+  late ShippingInfo shippingInfo;
+  refreshInfo() {
+    if (widget.shippingID == null) {
+      setState(() {
+        isNewInfo = true;
+      });
+    }
+    dbHelper.read(widget.shippingID!).then(
+          (value) => setState(
+            () {
+              shippingInfo = value;
+              checkOutNameCtrl.text = shippingInfo.name ?? '';
+              phoneNumCtrl.text = shippingInfo.phoneNumber.toString();
+              addressCtrl.text = shippingInfo.streetAddress ?? '';
+              postCodeCtrl.text = shippingInfo.postcode.toString();
+              houseNoCtrl.text = shippingInfo.houseNo.toString();
+            },
+          ),
+        );
+  }
+
+  createNote() {
+    setState(() {
+      isLoading = true;
+    });
+    final info = ShippingInfo(
+      name: checkOutNameCtrl.text,
+      phoneNumber: int.parse(phoneNumCtrl.text),
+      streetAddress: addressCtrl.text,
+      postcode: int.parse(postCodeCtrl.text),
+      houseNo: int.parse(houseNoCtrl.text),
+    );
+    if (isNewInfo) {
+      dbHelper.create(info);
+    } else {
+      info.id = shippingInfo.id;
+      dbHelper.update(info);
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  deleteNote() {
+    dbHelper.delete(shippingInfo.id!);
+  }
+
+  @override
+  void dispose() {
+    dbHelper.closeDb();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  bool isLoading = false;
+  bool isNewInfo = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +110,12 @@ class _CheckoutViewState extends State<CheckoutView> {
           vertical: 29,
         ),
         child: ButtonWidget(
-          onTap: () => Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => const ConfirmShippingView(),
-          )),
+          onTap: () {
+            createNote();
+            Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) => const ConfirmShippingView(),
+            ));
+          },
           height: 45.h,
           width: screenSize(context).width,
           color: AppColors.primaryColor,

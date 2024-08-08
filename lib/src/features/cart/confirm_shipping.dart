@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/src/core/domain/shipping_info/shipping_info.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -11,7 +12,9 @@ import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
 class ConfirmShippingView extends StatefulWidget {
-  const ConfirmShippingView({super.key});
+  const ConfirmShippingView({super.key, this.shippingInfo});
+
+  final ShippingInfo? shippingInfo;
 
   @override
   State<ConfirmShippingView> createState() => _ConfirmShippingViewState();
@@ -175,7 +178,7 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                       color: AppColors.textGreyColor,
                                     ),
                               ),
-                              Text('Hilary',
+                              Text(widget.shippingInfo!.name ?? '',
                                   style:
                                       Theme.of(context).textTheme.labelSmall),
                             ],
@@ -192,7 +195,7 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                       color: AppColors.textGreyColor,
                                     ),
                               ),
-                              Text('124 ABC Drive',
+                              Text(widget.shippingInfo?.streetAddress ?? '',
                                   style:
                                       Theme.of(context).textTheme.labelSmall),
                             ],
@@ -210,7 +213,7 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                     ),
                               ),
                               Text('Lagos',
-                                  style:
+                                  style:  
                                       Theme.of(context).textTheme.labelSmall),
                             ],
                           )
