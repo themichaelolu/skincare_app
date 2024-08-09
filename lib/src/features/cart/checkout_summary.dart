@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/src/core/domain/shipping_info/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -10,16 +12,19 @@ import 'package:skincare_app/src/features/cart/order_success.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
-class CheckOutSummaryView extends StatefulWidget {
+class CheckOutSummaryView extends ConsumerStatefulWidget {
   const CheckOutSummaryView({super.key});
 
   @override
-  State<CheckOutSummaryView> createState() => _CheckOutSummaryViewState();
+  ConsumerState<CheckOutSummaryView> createState() =>
+      _CheckOutSummaryViewState();
 }
 
-class _CheckOutSummaryViewState extends State<CheckOutSummaryView> {
+class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
+
   @override
   Widget build(BuildContext context) {
+      final ship = ref.watch(shippingInfoProvider);
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(
@@ -208,7 +213,8 @@ class _CheckOutSummaryViewState extends State<CheckOutSummaryView> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Chioma Hilary',
+                                       ship.first.name ?? '',
+                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
@@ -216,7 +222,8 @@ class _CheckOutSummaryViewState extends State<CheckOutSummaryView> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                       ),
-                                      Text('(+234 90 6934 9103)',
+                                      Text(ship.first.phoneNumber.toString(),
+                                        overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium),
@@ -224,8 +231,9 @@ class _CheckOutSummaryViewState extends State<CheckOutSummaryView> {
                               ),
                               SizedBox(
                                 width: 181.w,
-                                child: const Text(
-                                  '12 ABC Drive, Lagos, Nigeria,0123',
+                                child:  Text(
+                                  ship.first.streetAddress ?? '',
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               )
                             ],

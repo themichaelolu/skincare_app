@@ -157,7 +157,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
                 ),
                 child: Center(
                   child: Image.asset(
-                      widget.product?.images.first.bigPicture ?? ''),
+                      widget.product?.image ?? ''),
                 ),
               ),
               Positioned(
@@ -356,7 +356,7 @@ class IngredientsTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      product?.ingredients ?? '',
+      product?.ingredients!.first ?? '',
       style: const TextStyle(
         fontSize: 13,
         color: AppColors.textGreyColor,

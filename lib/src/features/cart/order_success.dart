@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -101,6 +102,11 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                 horizontal: 24,
               ),
               child: ButtonWidget(
+                onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const DashboardBaseView(),
+                    )),
                 height: 45.h,
                 width: screenSize(context).width,
                 color: AppColors.primaryColor,

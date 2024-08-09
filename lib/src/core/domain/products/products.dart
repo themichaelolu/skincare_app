@@ -7,9 +7,9 @@ class Product {
   final String? productBrand;
   final double? price;
   final String? description;
-  final List<ProductImages> images;
+  final String? image;
   final String? howToUse;
-  final String? ingredients;
+  final List<String>? ingredients;
   final int? reviewCount;
   final List<String>?sizes;
 
@@ -18,7 +18,7 @@ class Product {
     this.productBrand,
     this.price,
     this.description,
-    this.images = const [],
+    this.image,
     this.howToUse,
     this.ingredients,
     this.reviewCount,
@@ -34,13 +34,8 @@ class Product {
       description:
           "100% Centella asiatica extract from the untouched nature of Madagascar. SKIN1004's signature ampoule with a light watery texture and non-sticky formula. Madagascan Centella asiatica contains 7 times more soothing actives than other centella asiatica. Only consists the single most effective ingredient and nothing else to ensure maximized benefits. Immediately calms and hydrates sensitive skin.",
       howToUse: 'Just use it',
-      images: [
-        ProductImages(
-          smallPicture: AppAssets.product,
-          bigPicture: AppAssets.bigPic,
-        ),
-      ],
-      ingredients: 'Ingredients',
+      image: AppAssets.bigPic,
+      ingredients: ['Ingredients'],
       sizes: [
         '50 ml',
         '100 ml',
@@ -50,12 +45,7 @@ class Product {
   ];
 }
 
-class ProductImages {
-  final String? smallPicture;
-  final String? bigPicture;
 
-  ProductImages({this.smallPicture, this.bigPicture});
-}
 
 class ProductNotifier extends StateNotifier<List<Product>> {
   ProductNotifier() : super([]);
@@ -70,13 +60,10 @@ class ProductNotifier extends StateNotifier<List<Product>> {
         description:
             "100% Centella asiatica extract from the untouched nature of Madagascar. SKIN1004's signature ampoule with a light watery texture and non-sticky formula. Madagascan Centella asiatica contains 7 times more soothing actives than other centella asiatica. Only consists the single most effective ingredient and nothing else to ensure maximized benefits. Immediately calms and hydrates sensitive skin.",
         howToUse: 'Just use it',
-        images: [
-          ProductImages(
-            smallPicture: AppAssets.product,
-            bigPicture: AppAssets.bigPic,
-          ),
-        ],
-        ingredients: 'Ingredients',
+        image
+        : AppAssets.bigPic,
+         
+        ingredients: ['Ingredients'],
         sizes: [
         '50 ml',
         '100 ml',
@@ -91,13 +78,10 @@ class ProductNotifier extends StateNotifier<List<Product>> {
         description:
             "100% Centella asiatica extract from the untouched nature of Madagascar. SKIN1004's signature ampoule with a light watery texture and non-sticky formula. Madagascan Centella asiatica contains 7 times more soothing actives than other centella asiatica. Only consists the single most effective ingredient and nothing else to ensure maximized benefits. Immediately calms and hydrates sensitive skin.",
         howToUse: 'Just use it',
-        images: [
-          ProductImages(
-            smallPicture: AppAssets.product,
-            bigPicture: AppAssets.bigPic,
-          ),
-        ],
-        ingredients: 'Ingredients',
+        image:
+          AppAssets.bigPic,
+         
+        ingredients: ['Ingredients'],
       )
     ];
     state = products;

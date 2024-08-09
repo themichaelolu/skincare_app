@@ -1,5 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
+const _uuid = Uuid();
+
 class ShippingInfo {
-  late final int? id;
+ final String? id;
   final String? name;
   final int? phoneNumber;
   final String? streetAddress;
@@ -32,7 +37,7 @@ class ShippingInfo {
   }
 
   ShippingInfo copy({
-    final int? id,
+    final String? id,
     final String? name,
     final int? phoneNumber,
     final String? streetAddress,
@@ -49,12 +54,58 @@ class ShippingInfo {
       );
 
   factory ShippingInfo.fromJson(Map<String, Object?> json) => ShippingInfo(
-    id: json['id'] as int?,
-    name: json['name'] as String?,
-    phoneNumber: json['phoneNumber'] as int?,
-    streetAddress: json['streetAddress'] as String?,
-    houseNo: json['houseNo'] as int?,
-    postcode: json['postcode'] as int?
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      phoneNumber: json['phoneNumber'] as int?,
+      streetAddress: json['streetAddress'] as String?,
+      houseNo: json['houseNo'] as int?,
+      postcode: json['postcode'] as int?);
+}
 
-  );
+class ShippingTools extends Notifier<List<ShippingInfo>> {
+  @override
+  List<ShippingInfo> build() => [];
+  void addInfo(
+   
+    String? name,
+    int? phoneNumber,
+    String? houseAddress,
+    int? houseNo,
+    int? postcode,
+  ) {
+    state = [
+      ShippingInfo(
+        id: _uuid.v4(),
+        name: name,
+        phoneNumber: phoneNumber,
+        streetAddress: houseAddress,
+        postcode: postcode,
+        houseNo: houseNo,
+      )
+    ];
+  }
+
+  void edit({
+    String? id,
+    String? name,
+    int? phoneNumber,
+    String? houseAddress,
+    int? houseNo,
+    int? postcode,
+  }) {
+    state = [
+      for (final shippingInfo in state)
+        if (shippingInfo.id == int.parse(id!))
+          ShippingInfo(
+            id: shippingInfo.id,
+            name: name,
+            phoneNumber: phoneNumber,
+            streetAddress: houseAddress,
+            houseNo: houseNo,
+            postcode: postcode,
+          )
+        else
+          shippingInfo,
+    ];
+  }
 }

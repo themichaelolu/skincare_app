@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/src/core/domain/shipping_info/provider.dart';
 import 'package:skincare_app/src/core/domain/shipping_info/shipping_info.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
@@ -11,22 +13,24 @@ import 'package:skincare_app/src/features/cart/payment.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
-class ConfirmShippingView extends StatefulWidget {
+class ConfirmShippingView extends ConsumerStatefulWidget {
   const ConfirmShippingView({super.key, this.shippingInfo});
 
   final ShippingInfo? shippingInfo;
 
   @override
-  State<ConfirmShippingView> createState() => _ConfirmShippingViewState();
+  ConsumerState<ConfirmShippingView> createState() =>
+      _ConfirmShippingViewState();
 }
 
-class _ConfirmShippingViewState extends State<ConfirmShippingView> {
+class _ConfirmShippingViewState extends ConsumerState<ConfirmShippingView> {
   bool isInstant = false;
   bool isStandard = false;
   bool isInterState = false;
 
   @override
   Widget build(BuildContext context) {
+    final ship = ref.watch(shippingInfoProvider);
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(
@@ -178,7 +182,8 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                       color: AppColors.textGreyColor,
                                     ),
                               ),
-                              Text(widget.shippingInfo!.name ?? '',
+                              Text(ship.first.name ?? '',
+                                  overflow: TextOverflow.ellipsis,
                                   style:
                                       Theme.of(context).textTheme.labelSmall),
                             ],
@@ -195,7 +200,8 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                       color: AppColors.textGreyColor,
                                     ),
                               ),
-                              Text(widget.shippingInfo?.streetAddress ?? '',
+                              Text(ship.first.streetAddress ?? '',
+                                  overflow: TextOverflow.ellipsis,
                                   style:
                                       Theme.of(context).textTheme.labelSmall),
                             ],
@@ -213,7 +219,7 @@ class _ConfirmShippingViewState extends State<ConfirmShippingView> {
                                     ),
                               ),
                               Text('Lagos',
-                                  style:  
+                                  style:
                                       Theme.of(context).textTheme.labelSmall),
                             ],
                           )

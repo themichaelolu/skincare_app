@@ -42,4 +42,7 @@ class AppAssets {
   static const success = 'assets/icons/success.svg';
   static const phone = 'assets/icons/phone.png';
   static const church = 'assets/icons/church.jpg';
+  static const homeOutlined = 'assets/icons/home_outlined.svg';
+  static const cloudUploadIcon = 'assets/icons/cloud_upload.svg';
+
 }

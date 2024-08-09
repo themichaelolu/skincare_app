@@ -1,6 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,8 +11,6 @@ import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/features/home/product_detail.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
-
-import '../../core/domain/products/products.dart';
 
 class HomeBaseView extends StatefulWidget {
   const HomeBaseView({
@@ -84,7 +82,7 @@ class _HomeBaseViewState extends State<HomeBaseView>
                       Text(
                         'Hey there Collette!',
                       ),
-                      Text('Good morning⛅')
+                      Text('Good morning ⛅')
                     ],
                   )
                 ],
@@ -138,9 +136,10 @@ class _HomeBaseViewState extends State<HomeBaseView>
               ),
             ),
             15.h.verticalSpace,
-            CarouselSlider(
+            FlutterCarousel(
                 items: images,
                 options: CarouselOptions(
+                  showIndicator: false,
                   height: 131.h,
                   viewportFraction: 0.9,
                   autoPlay: true,
@@ -176,9 +175,7 @@ class _HomeBaseViewState extends State<HomeBaseView>
             21.h.verticalSpace,
             Expanded(
                 child: TabBarView(controller: tabController, children: const [
-              AllProductsTabView(
-        
-              ),
+              AllProductsTabView(),
               CleanserTabView(),
               TonerTabView(),
               MoisturiserTabView(),
@@ -249,11 +246,9 @@ class AllProductsTabView extends ConsumerStatefulWidget {
 }
 
 class _AllProductsTabViewState extends ConsumerState<AllProductsTabView> {
- 
-
   @override
   Widget build(BuildContext context) {
-     final products = ref.watch(productProvider);
+    final products = ref.watch(productProvider);
     return GridView.builder(
       itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -264,13 +259,17 @@ class _AllProductsTabViewState extends ConsumerState<AllProductsTabView> {
       itemBuilder: (context, index) {
         final product = products[index];
         return InkWell(
-          onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) =>  ProductDetailView(
-              product: products[index],
-                ),)),
+          onTap: () => Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ProductDetailView(
+                  product: products[index],
+                ),
+              )),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(product.images.first.smallPicture!),
+              Image.asset(product.image!),
               8.h.verticalSpace,
               Text(
                 product.productBrand ?? '',

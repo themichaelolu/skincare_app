@@ -39,6 +39,7 @@ class TextFieldWidget extends StatefulWidget {
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
 
+
   final bool? enabled;
   final bool readOnly;
   final String? labelText;
@@ -88,6 +89,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         5.h.verticalSpace,
         TextFormField(
           validator: widget.validator,
+          onSaved: widget.onSaved,
           enabled: widget.enabled,
           maxLines: 1,
           readOnly: widget.readOnly,
