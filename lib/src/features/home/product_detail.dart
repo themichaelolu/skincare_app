@@ -1,5 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,12 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:skincare_app/src/core/domain/cart/providers.dart';
 import 'package:skincare_app/src/core/domain/products/products.dart';
-import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/features/cart/cart.dart';
-import 'package:skincare_app/src/features/home/home.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
 class ProductDetailView extends ConsumerStatefulWidget {
@@ -57,36 +53,12 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
               onTap: () {
                 cart.addProduct(widget.product!);
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Added to cart!')));
-                // showFlushbar(
-                //     context: context,
-                //     flushbar: Flushbar(
-                //       duration: const Duration(seconds: 3),
-                //       flushbarPosition: FlushbarPosition.TOP,
-                //       boxShadows: [
-                //         BoxShadow(
-                //           color: Colors.black.withOpacity(0.5),
-                //           offset: const Offset(0.0, 2.0),
-                //           blurRadius: 3.0,
-                //         ),
-                //       ],
-                //       title: 'Success!',
-                //       icon: Container(
-                //         height: 50.h,
-                //         width: 50.w,
-                //         decoration: const BoxDecoration(
-                //           shape: BoxShape.circle,
-                //           color: AppColors.darkGreen,
-                //         ),
-                //         child: const Center(
-                //           child: Icon(
-                //             CupertinoIcons.check_mark,
-                //             color: AppColors.white,
-                //           ),
-                //         ),
-                //       ),
-                //       message: 'Item added Successfully!',
-                //     ));
+                  const SnackBar(
+                    content: Text(
+                      'Added to cart!',
+                    ),
+                  ),
+                );
               },
               border: Border.all(
                 color: AppColors.primaryColor,
@@ -156,8 +128,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
                   color: AppColors.white,
                 ),
                 child: Center(
-                  child: Image.asset(
-                      widget.product?.image ?? ''),
+                  child: Image.asset(widget.product?.image ?? ''),
                 ),
               ),
               Positioned(
@@ -200,7 +171,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
                           ),
                     ),
                     Text(
-                      '★ ${widget.product?.reviewCount}Reviews',
+                      '★ ${widget.product?.reviewCount ?? '0'} Reviews',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: const Color(0xffFBBC05),
                           ),
@@ -229,7 +200,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
               ],
             ),
           ),
-          35.h.verticalSpace,
+          20.h.verticalSpace,
           TabBar(
             controller: tabController,
             tabs: const [
@@ -274,15 +245,16 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
           ),
           15.h.verticalSpace,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: SizedBox(
-              width: 250.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: widget.product!.sizes!
-                    .asMap()
-                    .entries
-                    .map((e) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SizedBox(
+                  height: 35.h,
+                  width: 250.w,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.product?.sizes?.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           height: 30.h,
                           width: 70.w,
                           decoration: BoxDecoration(
@@ -291,17 +263,14 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
                           ),
                           child: Center(
                             child: Text(
-                              e.value,
+                              '${widget.product?.sizes?[index] ?? ''} ml',
                               style: const TextStyle(
                                 fontSize: 13,
                               ),
                             ),
                           ),
-                        ))
-                    .toList(),
-              ),
-            ),
-          )
+                        );
+                      })))
         ],
       ),
     );
@@ -339,13 +308,12 @@ class HowToUseTabView extends StatelessWidget {
       product?.howToUse ?? '',
       style: const TextStyle(
         fontSize: 13,
-        color: AppColors.textGreyColor,
       ),
     );
   }
 }
 
-class IngredientsTabView extends StatelessWidget {
+class IngredientsTabView extends ConsumerWidget {
   const IngredientsTabView({
     super.key,
     this.product,
@@ -354,13 +322,12 @@ class IngredientsTabView extends StatelessWidget {
   final Product? product;
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      product?.ingredients!.first ?? '',
-      style: const TextStyle(
-        fontSize: 13,
-        color: AppColors.textGreyColor,
-      ),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListView.builder(
+        itemCount: product?.ingredients?.length,
+        itemBuilder: (context, index) {
+          final ingredient = product?.ingredients?[index];
+          return Text(ingredient ?? '');
+        });
   }
 }

@@ -1,23 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skincare_app/dashboard.dart';
+import 'package:skincare_app/src/core/domain/cart/providers.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
-import 'package:skincare_app/src/features/cart/checkout.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
-class OrderSuccessView extends StatefulWidget {
+class OrderSuccessView extends ConsumerStatefulWidget {
   const OrderSuccessView({super.key});
 
   @override
-  State<OrderSuccessView> createState() => _OrderSuccessViewState();
+  ConsumerState<OrderSuccessView> createState() => _OrderSuccessViewState();
 }
 
-class _OrderSuccessViewState extends State<OrderSuccessView> {
+class _OrderSuccessViewState extends ConsumerState<OrderSuccessView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,11 +103,15 @@ class _OrderSuccessViewState extends State<OrderSuccessView> {
                 horizontal: 24,
               ),
               child: ButtonWidget(
-                onTap: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => const DashboardBaseView(),
-                    )),
+                onTap: () {
+                  ref.invalidate(cartProvider);
+
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const DashboardBaseView(),
+                      ));
+                },
                 height: 45.h,
                 width: screenSize(context).width,
                 color: AppColors.primaryColor,

@@ -325,11 +325,11 @@ class _CheckoutViewState extends ConsumerState<CheckoutView> {
 
 class ContainerInWidget extends StatelessWidget {
   const ContainerInWidget({
-    Key? key,
+    super.key,
     this.color,
     this.number,
     this.text,
-  }) : super(key: key);
+  });
 
   final Color? color;
   final String? number;

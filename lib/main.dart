@@ -1,12 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skincare_app/src/features/cart/example.dart';
-import 'package:skincare_app/src/features/cart/fade.dart';
+import 'package:skincare_app/firebase_options.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/light_text_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -34,8 +38,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Satoshi',
         ),
         restorationScopeId: 'app',
-        home: OnboardingView(),
-        routes: {
+        home: const OnboardingView(),
+        routes: const {
           // '/onboarding' =>  OnboardingView();
         },
       ),

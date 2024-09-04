@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/src/core/domain/cart/providers.dart';
 import 'package:skincare_app/src/core/domain/shipping_info/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
@@ -21,10 +22,11 @@ class CheckOutSummaryView extends ConsumerStatefulWidget {
 }
 
 class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
-
   @override
   Widget build(BuildContext context) {
-      final ship = ref.watch(shippingInfoProvider);
+    final ship = ref.watch(shippingInfoProvider);
+    final cart = ref.watch(cartProvider);
+    final productQuantities = cart.productQuantity();
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(
@@ -130,8 +132,11 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                     height: 235.h,
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 4,
+                      itemCount: productQuantities.length,
                       itemBuilder: (context, index) {
+
+                        final product = productQuantities.keys.elementAt(index);
+                        final quantity = productQuantities[product];
                         return Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Row(
@@ -151,13 +156,13 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Black Rice Toner',
+                                      '${product.productName}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall,
                                     ),
                                     Text(
-                                      'Haruharu Wonder - 200ml',
+                                      '${product.productBrand}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall
@@ -165,7 +170,7 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                                             color: AppColors.textGreyColor,
                                           ),
                                     ),
-                                    Text('14,0000 x2',
+                                    Text('${product.price} x$quantity',
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall),
@@ -213,8 +218,8 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                       ship.first.name ?? '',
-                                         overflow: TextOverflow.ellipsis,
+                                        ship.first.name ?? '',
+                                        overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
@@ -223,7 +228,7 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                                             ),
                                       ),
                                       Text(ship.first.phoneNumber.toString(),
-                                        overflow: TextOverflow.ellipsis,
+                                          overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium),
@@ -231,7 +236,7 @@ class _CheckOutSummaryViewState extends ConsumerState<CheckOutSummaryView> {
                               ),
                               SizedBox(
                                 width: 181.w,
-                                child:  Text(
+                                child: Text(
                                   ship.first.streetAddress ?? '',
                                   overflow: TextOverflow.ellipsis,
                                 ),

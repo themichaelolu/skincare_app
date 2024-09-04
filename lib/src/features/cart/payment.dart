@@ -11,7 +11,6 @@ import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/cart/card.dart';
 import 'package:skincare_app/src/features/cart/checkout.dart';
 import 'package:skincare_app/src/features/cart/checkout_summary.dart';
-import 'package:skincare_app/src/features/cart/payment.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
@@ -162,7 +161,7 @@ class _CheckOutPaymentViewState extends State<CheckOutPaymentView> {
                           : null,
                       value: 'Card',
                       toggleable: true,
-                      activeColor: AppColors.primaryColor,
+                      activeColor: AppColors.primaryColor, 
                       title: Text(
                         'Credit or debit card',
                         style: Theme.of(context).textTheme.bodySmall,
@@ -180,7 +179,7 @@ class _CheckOutPaymentViewState extends State<CheckOutPaymentView> {
                           selectedPayment = value;
                         });
                       },
-                      fillColor: const MaterialStatePropertyAll(
+                      fillColor: const WidgetStatePropertyAll(
                         AppColors.primaryColor,
                       ),
                       selectedTileColor: AppColors.lightGreen,
@@ -220,7 +219,7 @@ class _CheckOutPaymentViewState extends State<CheckOutPaymentView> {
                           selectedPayment = value;
                         });
                       },
-                      fillColor: const MaterialStatePropertyAll(
+                      fillColor: const WidgetStatePropertyAll(
                         AppColors.primaryColor,
                       ),
                       selectedTileColor: AppColors.lightGreen,
@@ -251,7 +250,7 @@ class _CheckOutPaymentViewState extends State<CheckOutPaymentView> {
                           selectedPayment = value;
                         });
                       },
-                      fillColor: const MaterialStatePropertyAll(
+                      fillColor: const WidgetStatePropertyAll(
                         AppColors.primaryColor,
                       ),
                       selectedTileColor: AppColors.lightGreen,

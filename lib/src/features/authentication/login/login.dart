@@ -5,7 +5,6 @@ import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/core/utils/constants/extensions.dart';
-import 'package:skincare_app/src/features/home/home.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
 import '../../../core/utils/constants/textfield.dart';

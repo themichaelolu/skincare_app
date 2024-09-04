@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
-import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 
 import '../app_assets/app_assets.dart';
 
@@ -38,7 +36,6 @@ class TextFieldWidget extends StatefulWidget {
   final TextInputType? keyboardType;
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
-
 
   final bool? enabled;
   final bool readOnly;
@@ -88,7 +85,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         ),
         5.h.verticalSpace,
         TextFormField(
+          cursorColor: AppColors.primaryColor,
           validator: widget.validator,
+          onChanged: widget.onChanged,
           onSaved: widget.onSaved,
           enabled: widget.enabled,
           maxLines: 1,

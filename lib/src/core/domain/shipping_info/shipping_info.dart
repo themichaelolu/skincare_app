@@ -95,6 +95,7 @@ class ShippingTools extends Notifier<List<ShippingInfo>> {
   }) {
     state = [
       for (final shippingInfo in state)
+        // ignore: unrelated_type_equality_checks
         if (shippingInfo.id == int.parse(id!))
           ShippingInfo(
             id: shippingInfo.id,

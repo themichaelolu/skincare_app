@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/domain/products/products.dart';
 import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
+import 'package:skincare_app/src/core/utils/constants/dropdown.dart';
 import 'package:skincare_app/src/core/utils/constants/string_extensions.dart';
 import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 class AddProductView extends ConsumerStatefulWidget {
   const AddProductView({
@@ -42,8 +47,8 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
 
   File? file;
   FilePickerResult? result;
-    final picker = ImagePicker();
-  
+  final picker = ImagePicker();
+  String? selectedType;
 
   Future getFileFromFileManager() async {
     result = await FilePicker.platform.pickFiles(
@@ -61,8 +66,7 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
     });
   }
 
-
-    Future getImageFromCamera() async {
+  Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     setState(() {
@@ -90,7 +94,7 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: () {
-                    Navigator.pop;
+                    Navigator.of(context).pop();
                     getFileFromFileManager();
                   },
                   child: const Text(
@@ -103,7 +107,7 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
                 CupertinoActionSheetAction(
                   onPressed: () {
                     getImageFromCamera();
-                   Navigator.pop;
+                    Navigator.of(context).pop();
                   },
                   child: const Text(
                     'Take from camera',
@@ -119,11 +123,13 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
   @override
   Widget build(BuildContext context) {
     // final product = ref.watch(productProvider);
+    final dbHelper = ref.watch(databaseProvider);
+
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 29),
         child: ButtonWidget(
-          onTap: () {
+          onTap: () async {
             final product = Product(
               productBrand: brandCtrl.text,
               productName: productNameCtrl.text,
@@ -132,8 +138,18 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
               price: double.parse(priceCtrl.text),
               description: descriptionCtrl.text,
               sizes: sizes,
+              productType: selectedType,
             );
-            ref.read(productProvider.notifier).addProduct(product);
+            await ref
+                .read(productControllerProvider.notifier)
+                .addProduct(product);
+
+            // ref.read(productProvider.notifier).addProduct(product);
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const DashboardBaseView(),
+                ));
           },
           height: 45.h,
           width: screenSize(context).width,
@@ -195,27 +211,50 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
               TextFieldWidget(
                 labelText: 'Sizes',
                 controller: sizesCtrl,
-                hintText: 'Enter sizes(commas will add itself)',
-                onSaved: (value) {
-                  value = sizesCtrl.text;
-                  if (value != null && value.isNotEmpty) {
-                    sizes =
-                        value.split(',').map((size) => size.trim()).toList();
-                  }
+                hintText: 'Enter your sizes (in ml)',
+                onChanged: (value) {
+                  setState(() {
+                    sizes = sizesCtrl.text.split(',').toList();
+                  });
                 },
               ),
               10.h.verticalSpace,
               TextFieldWidget(
                 labelText: 'Ingredients',
                 controller: ingredientsCtrl,
-                hintText: 'Enter ingredients(commas will add itself)',
-                onSaved: (value) {
-                  value = ingredientsCtrl.text;
-                  if (value != null && value.isNotEmpty) {
-                    ingredients =
-                        value.split(',').map((size) => size.trim()).toList();
-                  }
+                hintText: 'Enter ingredients',
+                onChanged: (value) {
+                  setState(() {
+                    ingredients = ingredientsCtrl.text
+                        .split(',')
+                        .map((e) => e.trim())
+                        .toList();
+                  });
                 },
+              ),
+              10.h.verticalSpace,
+              Text(
+                'Product Type',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+              5.h.verticalSpace,
+              AppDropdownInput(
+                
+                hintText: 'Product Type..',
+                value: selectedType,
+                onChanged: (value) {
+                  setState(() {
+                    selectedType = value;
+                  });
+                },
+                text: 'Product Type..',
+                options: const [
+                  'Cleanser',
+                  'Toner',
+                  'Moisturiser',
+                  'Serum',
+                  'Sunscreen',
+                ],
               ),
               20.h.verticalSpace,
               Text(
@@ -254,9 +293,12 @@ class DragDropContainer extends StatelessWidget {
       height: 105.h,
       width: screenSize(context).width,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColors.white,
-          border: Border.all(color: AppColors.primaryColor)),
+        borderRadius: BorderRadius.circular(10),
+        color: AppColors.white,
+        border: Border.all(
+          color: AppColors.primaryColor,
+        ),
+      ),
       child: file == null
           ? Center(
               child: Padding(
@@ -298,7 +340,7 @@ class DragDropContainer extends StatelessWidget {
                         const Text(' or drag and drop'),
                       ],
                     ),
-                    const Text('SVG, PNG, JPG or GIF (max. 800x400px)')
+                    const Text('SVG, PNG, JPG or GIF (max. 800x400px)'),
                   ],
                 ),
               ),
@@ -314,11 +356,15 @@ class DragDropContainer extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: Text(
-                    "📁 ${file!.path.getFileNameAndExtension(file!.path)}",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      "📁 ${file!.path.getFileNameAndExtension(file!.path)}",
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   ),
                 ),
               ],

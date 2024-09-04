@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
@@ -161,7 +159,7 @@ class _BuildRoutineViewState extends State<BuildRoutineView> {
                       ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

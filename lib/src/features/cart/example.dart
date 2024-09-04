@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
-import 'package:skincare_app/src/features/cart/fade.dart';
-import 'package:skincare_app/src/themes/tripple_rail.dart';
 
 class ExampleWidget extends StatelessWidget {
   const ExampleWidget({super.key});

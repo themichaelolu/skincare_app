@@ -16,21 +16,26 @@ class _ExploreViewState extends State<ExploreView> {
     return Scaffold(
       body: Center(
         child: TextButton.icon(
+          style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(AppColors.primaryColor),
+              splashFactory: NoSplash.splashFactory,
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder())),
           label: const Text(
             'Click here to add a product',
             style: TextStyle(
-              color: AppColors.primaryColor,
+              color: AppColors.white,
             ),
           ),
           onPressed: () => Navigator.of(context).push(CupertinoPageRoute(
             builder: (context) => const AddProductView(),
           )),
           icon: const Icon(
-            Icons.add,
-            color: AppColors.primaryColor,
+            CupertinoIcons.add,
+            color: AppColors.white,
           ),
         ),
       ),
     );
   }
 }
+  

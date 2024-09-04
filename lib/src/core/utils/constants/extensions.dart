@@ -29,7 +29,7 @@ extension ValidatorX on String {
     if (atIndex >= 0 && dotIndex > atIndex) {
       // Get the portion of the email to anonymize
       final substring =this. substring(0, atIndex);
-      final afterAt=this.substring(atIndex,this.length);
+      final afterAt=this.substring(atIndex,length);
       /// Get second character to secon  to last character
       final secondCharacterTseconToLastCharacter=substring.substring(1,substring.length-1);
       // Replace each character in the substring with 'x'

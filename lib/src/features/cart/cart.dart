@@ -8,11 +8,9 @@ import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/domain/cart/providers.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
-import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/cart/checkout.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
-import 'package:skincare_app/src/themes/tripple_rail.dart';
 
 class CartBaseView extends ConsumerStatefulWidget {
   const CartBaseView({super.key});

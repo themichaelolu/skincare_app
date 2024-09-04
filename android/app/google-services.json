@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1065114948459",
+    "project_id": "skincare-ce821",
+    "storage_bucket": "skincare-ce821.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065114948459:android:2e6fd8dd725ea1e28ef22e",
+        "android_client_info": {
+          "package_name": "com.example.skincare_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJEfoLhLvlYuKXRFD5mOakuwmFSKAfSD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
