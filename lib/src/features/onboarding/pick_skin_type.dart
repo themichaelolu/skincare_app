@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
+import 'package:skincare_app/src/features/onboarding/pick_skin_goals.dart';
 
 class PickSkinTypeView extends StatefulWidget {
-  const PickSkinTypeView({super.key, this.goToSkinGoals,});
+  const PickSkinTypeView({
+    super.key,
+    this.goToSkinGoals,
+  });
 
   final VoidCallback? goToSkinGoals;
 
@@ -105,7 +110,10 @@ class _PickSkinTypeViewState extends State<PickSkinTypeView> {
               height: 45.h,
               width: screenSize(context).width,
               color: AppColors.primaryColor,
-              onTap:  () => widget.goToSkinGoals?.call(),
+              onTap: () => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => const PickSkinGoalsView())),
               child: Center(
                 child: Text(
                   'Continue',

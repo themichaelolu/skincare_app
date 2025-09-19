@@ -40,7 +40,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     Image(
       image: AssetImage(AppAssets.onboarding2),
     ),
-    Image(
+    Image( 
       image: AssetImage(AppAssets.onboarding3),
     ),
   ];
@@ -74,8 +74,8 @@ class _OnboardingViewState extends State<OnboardingView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(),
-                  InkWell(
-                    onTap: () => Navigator.push(
+                  TextButton(
+                    onPressed: () => Navigator.push(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => const SignUpView(),
@@ -133,8 +133,9 @@ class _OnboardingViewState extends State<OnboardingView> {
               20.h.verticalSpace,
               if (currentIndex == 0)
                 const OnboardingText(
-                    headText: 'Authentic Products',
-                    subText: 'Discover & get your authentic beauty\nprodcuts'),
+                  headText: 'Authentic Products',
+                  subText: 'Discover & get your authentic beauty\nprodcuts',
+                ),
               if (currentIndex == 1)
                 const OnboardingText(
                   headText: 'Expert Guidance',

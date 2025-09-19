@@ -7,18 +7,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:skincare_app/src/core/data/seaech_delegate.dart';
+import 'package:skincare_app/src/core/domain/products/prod_controller.dart';
 import 'package:skincare_app/src/core/domain/products/prod_db_helper.dart';
 import 'package:skincare_app/src/core/domain/products/products.dart';
-import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
-import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
+
+import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/home/product_detail.dart';
+import 'package:skincare_app/src/features/home/profle_view.dart';
 import 'package:skincare_app/src/themes/tripple_rail.dart';
 
-import 'product_list_view.dart';
 
-class HomeBaseView extends StatefulWidget {
+class HomeBaseView extends ConsumerStatefulWidget {
   const HomeBaseView({
     super.key,
     this.goToDetails,
@@ -27,12 +29,13 @@ class HomeBaseView extends StatefulWidget {
   final VoidCallback? goToDetails;
 
   @override
-  State<HomeBaseView> createState() => _HomeBaseViewState();
+  ConsumerState<HomeBaseView> createState() => _HomeBaseViewState();
 }
 
-class _HomeBaseViewState extends State<HomeBaseView>
+class _HomeBaseViewState extends ConsumerState<HomeBaseView>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+
 
   ProductDatabaseHelper productDatabaseHelper = ProductDatabaseHelper();
   @override
@@ -40,6 +43,8 @@ class _HomeBaseViewState extends State<HomeBaseView>
     tabController = TabController(length: 6, vsync: this);
     super.initState();
   }
+
+  String _query = '';
 
   final List<Image> images = [
     Image.asset(
@@ -66,7 +71,54 @@ class _HomeBaseViewState extends State<HomeBaseView>
 
   @override
   Widget build(BuildContext context) {
+    // final googleSignInController = ref.watch(googleSignInControllerProvider);
+
     return Scaffold(
+      // drawer: Drawer(
+      //   shape: const LinearBorder(),
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //   child: Padding(
+      //     padding: const EdgeInsets.symmetric(
+      //       vertical: 15,
+      //     ),
+      //     child: ListView(
+      //       children: [
+      //         const ListTile(
+      //           leading: Icon(
+      //             CupertinoIcons.person,
+      //             color: AppColors.primaryColor,
+      //           ),
+      //           title: Text('Your profile'),
+      //         ),
+      //         ListTile(
+      //           leading: const Icon(
+      //             Icons.add,
+      //             color: AppColors.primaryColor,
+      //           ),
+      //           title: const Text('Add a product'),
+      //           onTap: () {
+      //             Navigator.of(context)
+      //                 .push(CupertinoPageRoute(builder: (context) {
+      //               return const AddProductView();
+      //             }));
+      //           },
+      //         ),
+      //         ListTile(
+      //             leading: const Icon(
+      //               Icons.list,
+      //               color: AppColors.primaryColor,
+      //             ),
+      //             title: const Text('Your list of products'),
+      //             onTap: () {
+      //               Navigator.of(context)
+      //                   .push(CupertinoPageRoute(builder: (context) {
+      //                 return const ProductListView();
+      //               }));
+      //             })
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -79,21 +131,22 @@ class _HomeBaseViewState extends State<HomeBaseView>
               leading: Row(
                 children: [
                   InkWell(
-                    onTap: () => Navigator.of(context)
-                        .push(CupertinoPageRoute(builder: (context) {
-                      return const ProductListView();
-                    })),
+                    onTap: () {
+                      // _drawerKey.currentState?.openDrawer();
+                      Navigator.of(context).push( CupertinoPageRoute(builder: (context) => const ProfileView(), ));
+                    },
                     child: CircleAvatar(
-                      radius: 20.w,
-                      backgroundColor: AppColors.primaryColor,
-                    ),
+                        radius: 20.w,
+                        backgroundColor: AppColors.primaryColor,
+                        child: Image.network(
+                            'https://static.vecteezy.com/system/resources/previews/002/387/693/non_2x/user-profile-icon-free-vector.jpg')),
                   ),
                   10.w.horizontalSpace,
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hey there Collette!',
+                        'Hey there User',
                       ),
                       Text('Good morning ⛅')
                     ],
@@ -103,53 +156,34 @@ class _HomeBaseViewState extends State<HomeBaseView>
               trailing: const Icon(Icons.notifications),
               trailExpanded: true,
             ),
-            20.h.verticalSpace,
-            Container(
-              height: 45,
-              width: screenSize(context).width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(
-                  color: AppColors.textGreyColor,
-                ),
+            TextFieldWidget(
+              readOnly: true,
+              onTap: () async {
+                await showSearch(
+                    context: context, delegate: CustomSearchDelegate(ref));
+              },
+              prefixIcon: const Icon(
+                CupertinoIcons.search,
+                color: Color(0xff787878),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 5,
-                ),
-                child: TrippleRail(
-                  leading: Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.search,
-                      ),
-                      10.w.horizontalSpace,
-                      Text(
-                        'Search for anything',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textGreyColor,
-                            ),
-                      ),
-                    ],
-                  ),
-                  trailExpanded: true,
-                  trailing: SizedBox(
-                    width: 51.w,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SvgPicture.asset(AppAssets.filter),
-                        SvgPicture.asset(AppAssets.scan),
-                      ],
-                    ),
-                  ),
+              hintText: 'Search for anything',
+              fillColor: Colors.white,
+              filled: true,
+              suffixIcon: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(AppAssets.filter),
+                    10.w.horizontalSpace,
+                    SvgPicture.asset(AppAssets.scan),
+                  ],
                 ),
               ),
             ),
             15.h.verticalSpace,
-            FlutterCarousel(
+          FlutterCarousel(
                 items: images,
                 options: CarouselOptions(
                   showIndicator: false,
@@ -187,13 +221,15 @@ class _HomeBaseViewState extends State<HomeBaseView>
             TabWidget(tabController: tabController),
             21.h.verticalSpace,
             Expanded(
-                child: TabBarView(controller: tabController, children: const [
-              AllProductsTabView(),
-              CleanserTabView(),
-              TonerTabView(),
-              MoisturiserTabView(),
-              SerumTabView(),
-              SunScreenTabView()
+                child: TabBarView(controller: tabController, children: [
+              AllProductsTabView(
+                query: _query,
+              ),
+              const CleanserTabView(),
+              const TonerTabView(),
+              const MoisturiserTabView(),
+              const SerumTabView(),
+              const SunScreenTabView()
             ]))
           ],
         ),
@@ -247,12 +283,11 @@ class TabWidget extends StatelessWidget {
 }
 
 class AllProductsTabView extends ConsumerStatefulWidget {
-  const AllProductsTabView({
-    super.key,
-    this.onTap,
-  });
+  const AllProductsTabView({super.key, this.onTap, required this.query});
 
   final void Function()? onTap;
+
+  final String query;
 
   @override
   ConsumerState<AllProductsTabView> createState() => _AllProductsTabViewState();
@@ -262,28 +297,26 @@ class _AllProductsTabViewState extends ConsumerState<AllProductsTabView> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final productState = ref.watch(productControllerProvider);
-      final products = productState.products;
-      if (productState.isLoading) {
-        return const Center(
-          child:  CircularProgressIndicator(
-            backgroundColor: AppColors.primaryColor,
-          ),
-        );
-      } else if (productState.error != null) {
-        return Center(
-          child: Text('Error: ${productState.error}'),
-        );
-      } else if (products.isEmpty) {
-        return const Center(
-          child: Text('No products available'),
-        );
-      }
-
-      return ProductsGrid(
-        products: products,
-      );
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product,
+                    )
+              : const Center(
+                  child: Text('Error occured on loading'),
+                ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
+              ),
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
     });
+
     //   return FutureBuilder(
     //     future: futureProduct,
     //     builder: (context, snapshot) {
@@ -320,7 +353,7 @@ class ProductsGrid extends StatelessWidget {
       itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.7,
+        childAspectRatio: 0.77,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
       ),
@@ -340,8 +373,8 @@ class ProductsGrid extends StatelessWidget {
               if (product.image != null && product.image!.isNotEmpty)
                 Image.file(
                   File(product.image!),
-                  height: 100,
-                  width: 100,
+                  height: 160,
+                  width: 155,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return const Icon(
@@ -391,102 +424,58 @@ class CleanserTabView extends ConsumerStatefulWidget {
 class _CleanserTabViewState extends ConsumerState<CleanserTabView> {
   @override
   Widget build(BuildContext context) {
-      return Consumer(builder: (context, ref, child) {
-      final productState = ref.watch(productControllerProvider);
-      final products = productState.products.where((product) => product.productType == 'Cleanser').toList();
-      if (productState.isLoading) {
-        return const CircularProgressIndicator(
-          backgroundColor: AppColors.primaryColor,
-        );
-      } else if (productState.error != null) {
-        return Center(
-          child: Text('Error: ${productState.error}'),
-        );
-      } else if (products.isEmpty) {
-        return const Center(
-          child: Text('No products available'),
-        );
-      }
-
-      return ProductsGrid(
-        products: products,
-      );
+    return Consumer(builder: (context, ref, child) {
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product
+                          .where((product) => product.productType == 'Cleanser')
+                          .toList(),
+                    )
+              : const Center(
+                  child: Text('Error on loading products available'),
+                ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
+              ),
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
     });
-    //   return FutureBuilder(
-    //     future: futureProduct,
-    //     builder: (context, snapshot) {
-    //       final filteredProduct = snapshot.data
-    //           ?.where((product) => product.productType == 'Cleanser')
-    //           .toList();
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return Center(
-    //             child: CircularProgressIndicator(
-    //           color: Theme.of(context).primaryColor,
-    //         ));
-    //       } else if (snapshot.hasError) {
-    //         return Center(child: Text('Error: ${snapshot.error}'));
-    //       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-    //         return const Center(child: Text('No products added.'));
-    //       }
-    //       return ProductsGrid(products: filteredProduct!);
-    //     },
-    //   );
-    // }
   }
 }
 
-class TonerTabView extends ConsumerWidget {
+class TonerTabView extends StatelessWidget {
   const TonerTabView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final products = ref.watch(productProvider);
-    final filteredProduct =
-        products.where((product) => product.productType == 'Toner').toList();
-    return GridView.builder(
-      itemCount: filteredProduct.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.7,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16),
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return InkWell(
-          onTap: () => Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => ProductDetailView(
-                  product: filteredProduct[index],
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ref, child) {
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product
+                          .where((product) => product.productType == 'Toner')
+                          .toList(),
+                    )
+              : const Center(
+                  child: Text('Error on loading products available'),
                 ),
-              )),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(product.image!),
-              8.h.verticalSpace,
-              Text(
-                product.productBrand ?? '',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.darkGreen,
-                    ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
               ),
-              4.h.verticalSpace,
-              Text(
-                product.productName ?? '',
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-              Text(
-                NumberFormat.decimalPattern().format(product.price),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              )
-            ],
-          ),
-        );
-      },
-    );
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
+    });
   }
 }
 
@@ -495,7 +484,29 @@ class MoisturiserTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Consumer(builder: (context, ref, child) {
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product
+                          .where(
+                              (product) => product.productType == 'Moisturiser')
+                          .toList(),
+                    )
+              : const Center(
+                  child: Text('Error on loading products available'),
+                ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
+              ),
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
+    });
   }
 }
 
@@ -504,7 +515,28 @@ class SerumTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Consumer(builder: (context, ref, child) {
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product
+                          .where((product) => product.productType == 'Serum')
+                          .toList(),
+                    )
+              : const Center(
+                  child: Text('Error on loading products available'),
+                ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
+              ),
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
+    });
   }
 }
 
@@ -513,6 +545,28 @@ class SunScreenTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Consumer(builder: (context, ref, child) {
+      return ref.watch(loadProductsProvider).when(
+          data: (product) => product != null
+              ? product.isEmpty
+                  ? const Center(
+                      child: Text('No products available'),
+                    )
+                  : ProductsGrid(
+                      products: product
+                          .where(
+                              (product) => product.productType == 'Sunscreen')
+                          .toList(),
+                    )
+              : const Center(
+                  child: Text('Error on loading products available'),
+                ),
+          error: (e, s) => Center(
+                child: Text('Error Occured: $e'),
+              ),
+          loading: () => CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ));
+    });
   }
 }

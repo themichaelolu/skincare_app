@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +43,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
     final cart = ref.read(cartProvider.notifier);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 28,
@@ -117,30 +120,42 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
         children: [
           Stack(
             children: [
-              Container(
-                height: 370.h,
-                width: screenSize(context).width,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  color: AppColors.white,
+              if (widget.product?.image != null &&
+                  widget.product!.image!.isNotEmpty)
+                Image.file(
+                  File(widget.product!.image!),
+                  height: 370.h,
+                  width: screenSize(context).width,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.image_not_supported,
+                      size: 50,
+                    );
+                  },
+                )
+              else
+                const Icon(
+                  Icons.image_not_supported,
+                  size: 200,
                 ),
-                child: Center(
-                  child: Image.asset(widget.product?.image ?? ''),
-                ),
-              ),
               Positioned(
                 left: 24,
                 top: 60,
                 child: InkWell(
                   onTap: () => Navigator.pop(context),
-                  child: SvgPicture.asset(
-                    AppAssets.back,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.black,
-                      BlendMode.srcIn,
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    color: Colors.white,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppAssets.back,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.black,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -148,8 +163,15 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
               Positioned(
                 right: 24,
                 top: 60,
-                child: SvgPicture.asset(
-                  AppAssets.like,
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  color: Colors.white,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AppAssets.like,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -160,6 +182,7 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
               vertical: 16,
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,6 +219,13 @@ class _ProductDetailViewState extends ConsumerState<ProductDetailView>
                           ?.copyWith(fontWeight: FontWeight.bold),
                     )
                   ],
+                ),
+                10.h.verticalSpace,
+                Text(
+                  widget.product!.productType ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.darkGreen,
+                      ),
                 ),
               ],
             ),

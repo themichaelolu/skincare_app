@@ -1,12 +1,15 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skincare_app/dashboard.dart';
+
+import 'package:skincare_app/src/core/domain/auth/google_sign_in.dart';
+import 'package:skincare_app/src/core/domain/auth/sign_up_ctrl.dart';
 import 'package:skincare_app/src/core/domain/cloud_firestore/cloud_firestore.dart';
+import 'package:skincare_app/src/core/repositories/async_value_ui.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -15,48 +18,70 @@ import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/authentication/login/login.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
-class SignUpView extends StatefulWidget {
+class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({
     super.key,
   });
 
   @override
-  State<SignUpView> createState() => _SignUpViewState();
+  ConsumerState<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpViewState extends State<SignUpView> {
-  final formKey = GlobalKey<FormState>();
-
+class _SignUpViewState extends ConsumerState<SignUpView> {
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final userNameCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   CloudFirestoreService? service;
 
   @override
   void initState() {
-    service = CloudFirestoreService(FirebaseFirestore.instance);
+    service = CloudFirestoreService(db: FirebaseFirestore.instance);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    Future<void> signUpUser() async {
+      ref.read(signUpControllerProvider.notifier).googleSignUp(
+            email: emailCtrl.text,
+            password: passwordCtrl.text,
+            afterFetched: () => Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => const DashboardBaseView(),
+              ),
+            ),
+          );
+    }
+
+    ref.listen(signUpControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context),);
+
+    final providerState = ref.watch(signUpControllerProvider);
+
+    ref.listen(googleSignInControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context),);
+
+    final googleState = ref.watch(googleSignInControllerProvider);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
+                spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Hey There!\nSign Up to Start',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  20.h.verticalSpace,
                   TextFieldWidget(
                     labelText: 'Name',
                     hintText: 'Please enter your name',
@@ -68,7 +93,6 @@ class _SignUpViewState extends State<SignUpView> {
                       return null;
                     },
                   ),
-                  10.h.verticalSpace,
                   TextFieldWidget(
                     labelText: 'Email address',
                     hintText: 'Please enter your email address',
@@ -83,103 +107,76 @@ class _SignUpViewState extends State<SignUpView> {
                       }
                     },
                   ),
-                  10.h.verticalSpace,
                   TextFieldWidget(
                     labelText: 'Username',
                     hintText: 'Please choose a username',
                     controller: userNameCtrl,
                   ),
-                  10.h.verticalSpace,
                   TextFieldWidget(
                     isPasswordField: true,
                     labelText: 'Password',
                     hintText: 'Please enter a password',
                     controller: passwordCtrl,
                   ),
-                  20.h.verticalSpace,
                   ButtonWidget(
                     onTap: () async {
-                      final userName = userNameCtrl.text.trim();
-                      final name = nameCtrl.text.trim();
-
-                      service?.add({
-                        'name': name,
-                        'username': userName,
-                      });
-
-                      String message = '';
-
-                      try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: emailCtrl.text,
-                                password: passwordCtrl.text);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'weak-password') {
-                          message = 'Password is too weak';
-                        } else if (e.code == 'email-already-in-use') {
-                          message = 'An account already exists with this email';
-                        }
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              title: const Text('Error'),
-                              content: Text(message),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text(
-                                      'CLOSE',
-                                      style: TextStyle(
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ))
-                              ],
-                            );
-                          },
-                        );
-                      } catch (e) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              title: const Text('Error'),
-                              content: Text(message),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Failed: $e',
-                                      style: TextStyle(
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ))
-                              ],
-                            );
-                          },
-                        );
+                      if (_formKey.currentState!.validate()) {
+                        signUpUser();
+                        // ref.read(signUpStateProvider.notifier).startLoading();
+                        // final message = await AuthService().signUp(
+                        //   email: emailCtrl.text.trim(),
+                        //   password: passwordCtrl.text.trim(),
+                        // );
+                        // ref.read(signUpStateProvider.notifier).stopLoading();
+                        // if (message!.contains('Success')) {
+                        //   Navigator.of(context).pushReplacement(
+                        //       CupertinoPageRoute(builder: (context) {
+                        //     return const DashboardBaseView();
+                        //   }));
+                        // } else {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (context) {
+                        //       return AlertDialog(
+                        //         backgroundColor:
+                        //             Theme.of(context).scaffoldBackgroundColor,
+                        //         title: const Text('Error'),
+                        //         content: Text(message),
+                        //         actions: [
+                        //           TextButton(
+                        //               onPressed: () {
+                        //                 Navigator.pop(context);
+                        //               },
+                        //               child: const Text(
+                        //                 'Close',
+                        //                 style: TextStyle(
+                        //                   color: AppColors.primaryColor,
+                        //                 ),
+                        //               ))
+                        //         ],
+                        //       );
+                        //     },
+                        //   );
+                        // }
                       }
                     },
                     height: 45.h,
                     width: screenSize(context).width,
-                    color: Colors.green,
-                    child: Text(
-                      'Continue',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.primaryColor,
+                    child: providerState.isLoading
+                        ? const CircularProgressIndicator(
                             color: Colors.white,
+                          )
+                        : Text(
+                            'Continue',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white,
+                                ),
                           ),
-                    ),
                   ),
-                  10.h.verticalSpace,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -203,22 +200,37 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ],
                   ),
-                  10.h.verticalSpace,
                   ButtonWidget(
+                      onTap: () async {
+                        await ref
+                            .read(googleSignInControllerProvider.notifier)
+                            .signIn(afterFetched: () {
+                          return Navigator.of(context).pushReplacement(
+                            CupertinoPageRoute(
+                              builder: (context) {
+                                return const DashboardBaseView();
+                              },
+                            ),
+                          );
+                        });
+                      },
                       height: 45.h,
                       width: screenSize(context).width,
                       border: Border.all(color: AppColors.textGreyColor),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(AppAssets.googleIcon),
-                          5.w.horizontalSpace,
-                          const Text(
-                            'Continue with Google',
-                          )
-                        ],
-                      )),
-                  10.h.verticalSpace,
+                      child: googleState.isLoading
+                          ? const CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(AppAssets.googleIcon),
+                                5.w.horizontalSpace,
+                                const Text(
+                                  'Continue with Google',
+                                )
+                              ],
+                            )),
                   ButtonWidget(
                       height: 45.h,
                       width: screenSize(context).width,
@@ -233,11 +245,11 @@ class _SignUpViewState extends State<SignUpView> {
                           )
                         ],
                       )),
-                  20.h.verticalSpace,
                   Row(
+                    spacing: 5.w,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Already have an account? '),
+                      const Text('Already have an account?'),
                       InkWell(
                         onTap: () => Navigator.pushReplacement(
                           context,

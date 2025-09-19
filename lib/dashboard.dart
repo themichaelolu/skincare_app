@@ -60,6 +60,7 @@ class _DashboardBaseViewState extends State<DashboardBaseView> {
             showSelectedLabels: false,
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
+          
             currentIndex: _selectedIndex,
             onTap: _selectedTab,
             items: [

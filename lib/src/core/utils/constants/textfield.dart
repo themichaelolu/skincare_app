@@ -24,6 +24,8 @@ class TextFieldWidget extends StatefulWidget {
     this.inputFormatters,
     this.onSaved,
     this.onChanged,
+    this.initialValue,
+    this.onTap,
   });
 
   final String? hintText;
@@ -36,12 +38,14 @@ class TextFieldWidget extends StatefulWidget {
   final TextInputType? keyboardType;
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
+  final void Function()? onTap;
 
   final bool? enabled;
   final bool readOnly;
   final String? labelText;
   final bool? filled;
   final Color? fillColor;
+  final String? initialValue;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -85,11 +89,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         ),
         5.h.verticalSpace,
         TextFormField(
+          initialValue: widget.initialValue,
           cursorColor: AppColors.primaryColor,
           validator: widget.validator,
           onChanged: widget.onChanged,
           onSaved: widget.onSaved,
           enabled: widget.enabled,
+          onTap: widget.onTap,
           maxLines: 1,
           readOnly: widget.readOnly,
           autovalidateMode: AutovalidateMode.onUserInteraction,

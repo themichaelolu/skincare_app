@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 
 import 'app_colors.dart';
 
@@ -36,6 +34,7 @@ class AppDropdownInput extends ConsumerWidget {
       builder: (FormFieldState<String> state) {
         return DropdownButtonHideUnderline(
           child: DropdownButtonFormField<String>(
+            
             decoration: InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

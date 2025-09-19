@@ -9,8 +9,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skincare_app/dashboard.dart';
+import 'package:skincare_app/src/core/domain/cloud_firestore/cloud_firestore.dart';
+import 'package:skincare_app/src/core/domain/products/add_product_controller.dart';
 import 'package:skincare_app/src/core/domain/products/products.dart';
-import 'package:skincare_app/src/core/domain/products/provider.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -19,7 +20,7 @@ import 'package:skincare_app/src/core/utils/constants/string_extensions.dart';
 import 'package:skincare_app/src/core/utils/constants/textfield.dart';
 import 'package:skincare_app/src/features/onboarding/onboarding.dart';
 
-final _firestore = FirebaseFirestore.instance;
+// final _firestore = FirebaseFirestore.instance;
 
 class AddProductView extends ConsumerStatefulWidget {
   const AddProductView({
@@ -41,6 +42,7 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
   final descriptionCtrl = TextEditingController();
   final sizesCtrl = TextEditingController();
   final ingredientsCtrl = TextEditingController();
+  CloudFirestoreService? service;
 
   List<String> ingredients = [];
   List<String> sizes = [];
@@ -66,6 +68,12 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
     });
   }
 
+   removeFile() {
+    setState(() {
+      file = null;
+    });
+  }
+
   Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
@@ -78,14 +86,10 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
 
   @override
   void initState() {
+    
     super.initState();
   }
 
-  removeFile() {
-    setState(() {
-      file = null;
-    });
-  }
 
   Future showOptions() async {
     showCupertinoModalPopup(
@@ -123,7 +127,6 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
   @override
   Widget build(BuildContext context) {
     // final product = ref.watch(productProvider);
-    final dbHelper = ref.watch(databaseProvider);
 
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -140,16 +143,17 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
               sizes: sizes,
               productType: selectedType,
             );
-            await ref
-                .read(productControllerProvider.notifier)
-                .addProduct(product);
+
+          
+            await ref.read(addProductControllerProvider.notifier).addProduct(
+                product: product,
+                afterFetched: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const DashboardBaseView(),
+                    )));
 
             // ref.read(productProvider.notifier).addProduct(product);
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => const DashboardBaseView(),
-                ));
           },
           height: 45.h,
           width: screenSize(context).width,
@@ -200,6 +204,7 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
                 labelText: 'Price',
                 controller: priceCtrl,
                 hintText: 'Price',
+                keyboardType: TextInputType.number,
               ),
               10.h.verticalSpace,
               TextFieldWidget(
@@ -239,7 +244,6 @@ class _AddProductViewState extends ConsumerState<AddProductView> {
               ),
               5.h.verticalSpace,
               AppDropdownInput(
-                
                 hintText: 'Product Type..',
                 value: selectedType,
                 onChanged: (value) {

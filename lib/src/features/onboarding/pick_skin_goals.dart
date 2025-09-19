@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
+import 'package:skincare_app/src/features/onboarding/build_routine.dart';
 import 'package:skincare_app/src/features/onboarding/pick_skin_type.dart';
 
 import 'onboarding.dart';
@@ -114,7 +116,10 @@ class _PickSkinGoalsViewState extends State<PickSkinGoalsView> {
             ButtonWidget(
               height: 45.h,
               width: screenSize(context).width,
-              onTap: () => widget.goToBuildRoutine?.call(),
+              onTap: () => Navigator.of(context)
+                  .pushReplacement(CupertinoPageRoute(builder: (context) {
+                return const BuildRoutineView();
+              })),
               color: AppColors.primaryColor,
               child: Center(
                 child: Text(

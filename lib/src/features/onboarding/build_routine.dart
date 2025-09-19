@@ -1,6 +1,8 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skincare_app/dashboard.dart';
 import 'package:skincare_app/src/core/utils/app_assets/app_assets.dart';
 import 'package:skincare_app/src/core/utils/constants/app_colors.dart';
 import 'package:skincare_app/src/core/utils/constants/app_sizes.dart';
@@ -149,7 +151,11 @@ class _BuildRoutineViewState extends State<BuildRoutineView> {
             ButtonWidget(
               height: 45.h,
               width: screenSize(context).width,
-              onTap: () => widget.goHome?.call(),
+              onTap: () => Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const DashboardBaseView(),
+                  )),
               color: AppColors.primaryColor,
               child: Center(
                 child: Text(

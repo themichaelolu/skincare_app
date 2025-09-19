@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:async';
@@ -48,32 +49,35 @@ class ProductDatabaseHelper {
     ''');
   }
 
-  Future<int> insertProduct(Product product) async {
+  Future<int> insertProduct(Product? product) async {
     Database db = await database;
-    return await db.insert('products', product.toMap());
+
+    return await db.insert('products', product!.toJson());
   }
 
   Future<List<Product>> getAll() async {
     final db = await database;
     const orderBy = 'productName';
     final result = await db.query('products', orderBy: orderBy);
-    return result.map((json) => Product.fromMap(json)).toList();
+    return result.map((json) => Product.fromJson(json)).toList();
   }
 
-  Future<List<Product>> getProducts() async {
+  Future<List<Product>?>? getProducts() async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query('products');
 
+    debugPrint(maps.toString());
+
     return List.generate(maps.length, (i) {
-      return Product.fromMap(maps[i]);
+      return Product.fromJson(maps[i]);
     });
   }
 
-  Future<int> updateProduct(Product product) async {
+  Future<int> updateProduct(Product? product) async {
     Database db = await database;
     return await db.update(
       'products',
-      product.toMap(),
+      product!.toJson(),
       where: 'id = ?',
       whereArgs: [product.id],
     );

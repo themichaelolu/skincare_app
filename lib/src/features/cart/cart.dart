@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,7 +83,7 @@ class _CartBaseViewState extends ConsumerState<CartBaseView> {
                           final quantity = productQuantities[product];
                           return Container(
                             margin: const EdgeInsets.all(10),
-                            height: 95.h,
+                            height: 100.h,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
@@ -97,19 +99,26 @@ class _CartBaseViewState extends ConsumerState<CartBaseView> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    height: 83.h,
-                                    width: 75.w,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Image(
-                                      image: AssetImage(
-                                        product.image!
-                                      ),
+                                  if (product.image != null &&
+                                      product.image!.isNotEmpty)
+                                    Image.file(
+                                      File(product.image!),
+                                      height: 75,
+                                      width: 75,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(
+                                          Icons.image_not_supported,
+                                          size: 20,
+                                        );
+                                      },
+                                    )
+                                  else
+                                    const Icon(
+                                      Icons.image_not_supported,
+                                      size: 30,
                                     ),
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 9, vertical: 14),
@@ -136,7 +145,7 @@ class _CartBaseViewState extends ConsumerState<CartBaseView> {
                                         6.h.verticalSpace,
                                         Text(
                                           NumberFormat.decimalPattern().format(
-                                              doubleQuantity(quantity!,
+                                               doubleQuantity(quantity!,
                                                   product.price!.toInt())),
                                           style: Theme.of(context)
                                               .textTheme
